@@ -1,0 +1,5 @@
+{
+  "engineId": "google-custom-search-engine-id",
+  "apiKey": "json-api-key",
+  "rootPath": "data-path"
+}
