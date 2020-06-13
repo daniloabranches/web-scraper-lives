@@ -14,7 +14,9 @@ class ResizeImage {
             fs.unlinkSync(tempFilePath);
           });
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

@@ -23,7 +23,7 @@ class DI {
 
     const imagesPath = path.resolve(
       this.rootPath,
-      "hosting",
+      "hosting-lives",
       "public",
       "images"
     );

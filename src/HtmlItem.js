@@ -1,5 +1,9 @@
 const moment = require("moment");
 
+function correctWrongTexts(text) {
+  return text.replace("hioje", "hoje").replace("Instragram", "Instagram");
+}
+
 class HtmlItem {
   constructor(htmlItem, searchImage) {
     this.htmlItem = htmlItem;
@@ -54,6 +58,7 @@ class HtmlItem {
   }
 
   replaceLinkNames(text) {
+    text = correctWrongTexts(text);
     return text
       .replace("(YouTube)", "")
       .replace("(Rede Globo)", "")
@@ -99,7 +104,9 @@ class HtmlItem {
       this.htmlItem.parentNode.previousElementSibling &&
       this.htmlItem.parentNode.previousElementSibling.textContent
     ) {
-      const text = this.htmlItem.parentNode.previousElementSibling.textContent;
+      const text = correctWrongTexts(
+        this.htmlItem.parentNode.previousElementSibling.textContent
+      );
 
       if (text.includes("hoje")) {
         return moment().format("DD/MM/YYYY");
