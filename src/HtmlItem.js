@@ -1,17 +1,18 @@
 const moment = require("moment");
 
-function correctWrongTexts(text) {
-  return text.replace("hioje", "hoje").replace("Instragram", "Instagram");
-}
-
 class HtmlItem {
   constructor(htmlItem, searchImage) {
     this.htmlItem = htmlItem;
     this.searchImage = searchImage;
+    this.sepNameAndHour = "–";
   }
 
   getJSON() {
     if (this.htmlItem && this.htmlItem.textContent) {
+      this.htmlItem.textContent = this.correctMainText(
+        this.htmlItem.textContent
+      );
+
       this.name = this.extractName();
       if (this.name) {
         const imageName = this.replaceSpecialChars(this.name) + ".jpg";
@@ -33,9 +34,9 @@ class HtmlItem {
 
   extractName() {
     if (this.validateName(this.htmlItem.textContent)) {
-      let name = this.replaceLinkNames(this.htmlItem.textContent);
+      let name = this.htmlItem.textContent;
 
-      let nameAndHour = name.split("–");
+      let nameAndHour = name.split(this.sepNameAndHour);
       if (nameAndHour.length > 0) {
         return nameAndHour[0].trim();
       }
@@ -57,8 +58,18 @@ class HtmlItem {
     return !found;
   }
 
+  correctMainText(text) {
+    text = this.correctWrongTexts(text);
+    text = this.replaceLinkNames(text);
+    text = this.removeDuplicateSep(text);
+    return text;
+  }
+
+  correctWrongTexts(text) {
+    return text.replace("hioje", "hoje").replace("Instragram", "Instagram");
+  }
+
   replaceLinkNames(text) {
-    text = correctWrongTexts(text);
     return text
       .replace("(YouTube)", "")
       .replace("(Rede Globo)", "")
@@ -72,6 +83,16 @@ class HtmlItem {
       .trim();
   }
 
+  removeDuplicateSep(text) {
+    const nameAndHour = text.split(this.sepNameAndHour);
+    if (nameAndHour.length > 2) {
+      const hour = nameAndHour.pop();
+      const name = nameAndHour.join("-");
+      text = `${name} ${this.sepNameAndHour} ${hour}`;
+    }
+    return text;
+  }
+
   replaceSpecialChars(text) {
     return text
       .toLowerCase()
@@ -81,7 +102,7 @@ class HtmlItem {
   }
 
   hasTime() {
-    const nameAndHour = this.htmlItem.textContent.split("–");
+    const nameAndHour = this.htmlItem.textContent.split(this.sepNameAndHour);
     if (nameAndHour.length > 1) {
       return nameAndHour[1].includes("h");
     }
@@ -90,8 +111,8 @@ class HtmlItem {
 
   extractHour() {
     if (this.hasTime()) {
-      let hour = this.replaceLinkNames(this.htmlItem.textContent);
-      const nameAndHour = hour.split("–");
+      let hour = this.htmlItem.textContent;
+      const nameAndHour = hour.split(this.sepNameAndHour);
       hour = nameAndHour[1].trim().split("h");
       return `${hour[0]}:${hour[1] == "" ? "00" : hour[1]}:00`;
     }
@@ -104,7 +125,7 @@ class HtmlItem {
       this.htmlItem.parentNode.previousElementSibling &&
       this.htmlItem.parentNode.previousElementSibling.textContent
     ) {
-      const text = correctWrongTexts(
+      const text = this.correctWrongTexts(
         this.htmlItem.parentNode.previousElementSibling.textContent
       );
 
