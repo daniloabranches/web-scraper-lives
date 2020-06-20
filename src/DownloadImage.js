@@ -10,22 +10,29 @@ class DownloadImage {
 
   async download(fileName, url, resize) {
     const tempFilePath = this.getTempFilePath(fileName, resize);
-    const filePath = this.getFilePath(fileName);
+    try {
+      const filePath = this.getFilePath(fileName);
 
-    const writer = fs.createWriteStream(tempFilePath);
+      const writer = fs.createWriteStream(tempFilePath);
 
-    await this.request(url, writer);
+      await this.request(url, writer);
 
-    return new Promise((resolve, reject) => {
-      const me = this;
-      writer.on("finish", function () {
-        if (resize) {
-          me.resizeImage.execute(tempFilePath, filePath);
-        }
-        resolve();
+      const writerPromise = new Promise((resolve, reject) => {
+        const me = this;
+        writer.on("finish", function () {
+          if (resize) {
+            me.resizeImage.execute(tempFilePath, filePath);
+          }
+          resolve();
+        });
+        writer.on("error", reject);
       });
-      writer.on("error", reject);
-    });
+
+      await writerPromise;
+    } catch (error) {
+      fs.unlinkSync(tempFilePath);
+      throw error;
+    }
   }
 
   getTempFilePath(fileName, resize) {
