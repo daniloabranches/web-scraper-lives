@@ -9,9 +9,7 @@ class HtmlItem {
 
   getJSON() {
     if (this.htmlItem && this.htmlItem.textContent) {
-      this.htmlItem.textContent = this.correctMainText(
-        this.htmlItem.textContent
-      );
+      this.textContent = this.correctMainText(this.htmlItem.textContent);
 
       this.name = this.extractName();
       if (this.name) {
@@ -33,10 +31,8 @@ class HtmlItem {
   }
 
   extractName() {
-    if (this.validateName(this.htmlItem.textContent)) {
-      let name = this.htmlItem.textContent;
-
-      let nameAndHour = name.split(this.sepNameAndHour);
+    if (this.validateName(this.textContent)) {
+      let nameAndHour = this.textContent.split(this.sepNameAndHour);
       if (nameAndHour.length > 0) {
         return nameAndHour[0].trim();
       }
@@ -77,6 +73,7 @@ class HtmlItem {
       .replace("(TikTok)", "")
       .replace("(Facebook)", "")
       .replace("(Twich)", "")
+      .replace("(Twitch)", "")
       .replace("(Canal Multishow)", "")
       .replace("(Cultura Em Casa)", "")
       .replace("(Ingresse.com)", "")
@@ -102,7 +99,7 @@ class HtmlItem {
   }
 
   hasTime() {
-    const nameAndHour = this.htmlItem.textContent.split(this.sepNameAndHour);
+    const nameAndHour = this.textContent.split(this.sepNameAndHour);
     if (nameAndHour.length > 1) {
       return nameAndHour[1].includes("h");
     }
@@ -111,9 +108,8 @@ class HtmlItem {
 
   extractHour() {
     if (this.hasTime()) {
-      let hour = this.htmlItem.textContent;
-      const nameAndHour = hour.split(this.sepNameAndHour);
-      hour = nameAndHour[1].trim().split("h");
+      const nameAndHour = this.textContent.split(this.sepNameAndHour);
+      const hour = nameAndHour[1].trim().split("h");
       return `${hour[0]}:${hour[1] == "" ? "00" : hour[1]}:00`;
     }
     return "00:00:00";
