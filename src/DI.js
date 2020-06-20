@@ -9,6 +9,7 @@ const ResizeImage = require("./ResizeImage");
 class DI {
   constructor(config) {
     this.rootPath = config.rootPath;
+    this.contentFolderName = config.contentFolderName;
     this.searchImageEngineId = config.engineId;
     this.searchImageApiKey = config.apiKey;
   }
@@ -23,7 +24,7 @@ class DI {
 
     const imagesPath = path.resolve(
       this.rootPath,
-      "hosting-lives",
+      this.contentFolderName,
       "public",
       "images"
     );

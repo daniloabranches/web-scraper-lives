@@ -1,5 +1,6 @@
 {
   "engineId": "google-custom-search-engine-id",
   "apiKey": "json-api-key",
-  "rootPath": "data-path"
+  "rootPath": "root-path",
+  "contentFolderName": "content-folder-name"
 }
