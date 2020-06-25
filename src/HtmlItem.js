@@ -77,6 +77,8 @@ class HtmlItem {
       .replace("(Canal Multishow)", "")
       .replace("(Cultura Em Casa)", "")
       .replace("(Ingresse.com)", "")
+      .replace("(Aplicativo BeApp)", "")
+      .replace("(Site oficial)", "")
       .trim();
   }
 
@@ -139,6 +141,9 @@ class HtmlItem {
           .replace("(quinta-feira)", "")
           .replace("(sexta-feira)", "")
           .replace("(sábado)", "")
+          .replace(" de junho", "/06")
+          .replace(" de julho", "/07")
+          .replace(" de agosto", "/08")
           .trim() + "/2020"
       );
     }
