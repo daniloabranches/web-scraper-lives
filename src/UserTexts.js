@@ -1,0 +1,40 @@
+const texts = {
+  invalidNames: [
+    "Lives dessa semana",
+    "Lives da semana que vem",
+    "Lives nacionais que já passaram",
+    "Lives internacionais que já passaram",
+  ],
+  wrongTexts: [
+    ["hioje", "hoje"],
+    [" de junho", "/06"],
+    [" de julho", "/07"],
+    [" de agosto", "/08"],
+    [" de setembro", "/09"],
+  ],
+  textsToRemove: [
+    "(YouTube)",
+    "(Rede Globo)",
+    "(Instagram)",
+    "(Instragram)",
+    "(TikTok)",
+    "(Facebook)",
+    "(Twitch)",
+    "(Twich)",
+    "(Canal Multishow)",
+    "(Cultura Em Casa)",
+    "(Ingresse.com)",
+    "(Aplicativo BeApp)",
+    "(Site oficial)",
+    "Lives do dia",
+    "(domingo)",
+    "(segunda-feira)",
+    "(terça-feira)",
+    "(quarta-feira)",
+    "(quinta-feira)",
+    "(sexta-feira)",
+    "(sábado)",
+  ],
+};
+
+module.exports = texts;

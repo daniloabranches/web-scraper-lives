@@ -1,5 +1,7 @@
 const moment = require("moment");
 
+const { invalidNames, textsToRemove, wrongTexts } = require("./UserTexts");
+
 class HtmlItem {
   constructor(htmlItem, searchImage) {
     this.htmlItem = htmlItem;
@@ -9,7 +11,7 @@ class HtmlItem {
 
   getJSON() {
     if (this.htmlItem && this.htmlItem.textContent) {
-      this.textContent = this.correctMainText(this.htmlItem.textContent);
+      this.textContent = this.correctText(this.htmlItem.textContent);
 
       this.name = this.extractName();
       if (this.name) {
@@ -42,44 +44,28 @@ class HtmlItem {
   }
 
   validateName(name) {
-    const invalidNames = [
-      "Lives dessa semana",
-      "Lives da semana que vem",
-      "Lives nacionais que já passaram",
-      "Lives internacionais que já passaram",
-    ];
-
-    const found = invalidNames.find((item) => name.includes(item));
-
-    return !found;
+    return !invalidNames.find((item) => name.includes(item));
   }
 
-  correctMainText(text) {
+  correctText(text) {
     text = this.correctWrongTexts(text);
-    text = this.replaceLinkNames(text);
+    text = this.removeTexts(text);
     text = this.removeDuplicateSep(text);
     return text;
   }
 
   correctWrongTexts(text) {
-    return text.replace("hioje", "hoje").replace("Instragram", "Instagram");
+    wrongTexts.forEach((item) => {
+      text = text.replace(item[0], item[1]);
+    });
+    return text.trim();
   }
 
-  replaceLinkNames(text) {
-    return text
-      .replace("(YouTube)", "")
-      .replace("(Rede Globo)", "")
-      .replace("(Instagram)", "")
-      .replace("(TikTok)", "")
-      .replace("(Facebook)", "")
-      .replace("(Twich)", "")
-      .replace("(Twitch)", "")
-      .replace("(Canal Multishow)", "")
-      .replace("(Cultura Em Casa)", "")
-      .replace("(Ingresse.com)", "")
-      .replace("(Aplicativo BeApp)", "")
-      .replace("(Site oficial)", "")
-      .trim();
+  removeTexts(text) {
+    textsToRemove.forEach((item) => {
+      text = text.replace(item, "");
+    });
+    return text.trim();
   }
 
   removeDuplicateSep(text) {
@@ -123,7 +109,7 @@ class HtmlItem {
       this.htmlItem.parentNode.previousElementSibling &&
       this.htmlItem.parentNode.previousElementSibling.textContent
     ) {
-      const text = this.correctWrongTexts(
+      const text = this.correctText(
         this.htmlItem.parentNode.previousElementSibling.textContent
       );
 
@@ -131,21 +117,7 @@ class HtmlItem {
         return moment().format("DD/MM/YYYY");
       }
 
-      return (
-        text
-          .replace("Lives do dia", "")
-          .replace("(domingo)", "")
-          .replace("(segunda-feira)", "")
-          .replace("(terça-feira)", "")
-          .replace("(quarta-feira)", "")
-          .replace("(quinta-feira)", "")
-          .replace("(sexta-feira)", "")
-          .replace("(sábado)", "")
-          .replace(" de junho", "/06")
-          .replace(" de julho", "/07")
-          .replace(" de agosto", "/08")
-          .trim() + "/2020"
-      );
+      return text + "/2020";
     }
 
     console.log(`Live ${this.name} com data incorreta`);
