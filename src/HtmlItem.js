@@ -15,9 +15,15 @@ class HtmlItem {
 
       this.name = this.extractName();
       if (this.name) {
-        const imageName = this.replaceSpecialChars(this.name) + ".jpg";
+        let imageName = this.replaceSpecialChars(this.name) + ".jpg";
         const date = this.extractDateTime();
         const link = this.extractLink();
+
+        if (this.searchImage.isOfflineMode()) {
+          if (!this.searchImage.existsImage(imageName)) {
+            imageName = "default.jpg";
+          }
+        }
 
         return {
           name: this.name,

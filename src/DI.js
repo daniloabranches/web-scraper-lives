@@ -33,7 +33,8 @@ class DI {
       this.searchImageEngineId,
       this.searchImageApiKey,
       downloadImage,
-      imagesPath
+      imagesPath,
+      true
     );
   }
 

@@ -14,6 +14,7 @@ const texts = {
   ],
   textsToRemove: [
     "(YouTube)",
+    "(YouTube",
     "(Rede Globo)",
     "(Instagram)",
     "(Instragram)",

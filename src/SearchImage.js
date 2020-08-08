@@ -5,15 +5,20 @@ const GoogleImages = require("google-images");
 const AsyncForEach = require("./AsyncForEach");
 
 class SearchImage {
-  constructor(engineId, apiKey, downloadImage, imagesPath) {
+  constructor(engineId, apiKey, downloadImage, imagesPath, offlineMode) {
     this.engineId = engineId;
     this.apiKey = apiKey;
     this.downloadImage = downloadImage;
     this.imagesPath = imagesPath;
+    this.offlineMode = offlineMode;
     this.client = new GoogleImages(this.engineId, this.apiKey);
   }
 
   async search(query, fileName) {
+    if (this.isOfflineMode()) {
+      return;
+    }
+
     if (Array.isArray(query)) {
       await AsyncForEach.each(query, async (image) => {
         await this.search(image.name, image.fileName);
@@ -21,8 +26,7 @@ class SearchImage {
       return;
     }
 
-    const fileNamePath = path.resolve(this.imagesPath, fileName);
-    if (fs.existsSync(fileNamePath)) {
+    if (this.existsImage(fileName)) {
       return;
     }
 
@@ -49,6 +53,14 @@ class SearchImage {
         fileNameExtension
       );
     }
+  }
+
+  isOfflineMode() {
+    return this.offlineMode;
+  }
+
+  existsImage(imageName) {
+    return fs.existsSync(path.resolve(this.imagesPath, imageName));
   }
 
   getFileNameWithouExtension(fileName) {
