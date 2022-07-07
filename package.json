@@ -9,6 +9,6 @@
     "google-images": "^2.1.0",
     "image-clipper": "^0.4.4",
     "jsdom": "^16.2.2",
-    "moment": "^2.25.0"
+    "moment": "^2.29.4"
   }
 }
